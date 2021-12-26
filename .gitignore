@@ -1,0 +1,4 @@
+.venv/
+shift_daily_tasks_creator.egg-info/
+.idea/
+STD_creator/__pycache__/

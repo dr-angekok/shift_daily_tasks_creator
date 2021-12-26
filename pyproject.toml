@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "shift_daily_tasks_creator"
+version = "0.1.0"
+description = ""
+authors = ["Angekok <angekok@mail.ru>"]
+packages = [
+  { include = "STD_creator" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+PyQt5 = "^5.15.6"
+configparser = "^5.2.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+
+[tool.poetry.scripts]
+STD_creator = "STD_creator"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
