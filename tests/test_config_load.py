@@ -33,3 +33,14 @@ def test_read():
     assert config.template_path == 'tests/fixtures/files/template.xlsx'
     assert config.get_dates == {'min': MIN_DATE, 'max': MAX_DATE}
     assert config.get_account == 2307000
+
+
+def test_read_comparison(tmpdir):
+    config = config_crud.ComparisonIni(tmpdir)
+    assert 'токарная' in config.comparison.keys()
+    assert config.comparison['токарная'] == 'токарь'
+
+def test_read_comparison_template():
+    config = config_crud.ComparisonIni(SETTINGS_INI_PATH)
+    assert 'фрезерная' in config.comparison.keys()
+    assert config.comparison['фрезерная'] == 'фрезеровщик'

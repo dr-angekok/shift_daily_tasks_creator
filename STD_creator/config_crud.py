@@ -7,6 +7,14 @@ from datetime import date
 MIN_DATE = date(2018, 7, 1)
 MAX_DATE = date(2018, 8, 15)
 
+DEF_COMPARISON = {
+    'токарная': 'токарь',
+    'фрезерная': 'фрезеровщик',
+    'шлифовальная': 'шлифовщик',
+    'расточная': 'токарь-расточник',
+    'слесарная': 'слесарь',
+}
+
 
 class CrudConfig:
     def __init__(self, path=os.getcwd()):
@@ -100,3 +108,28 @@ class CrudConfig:
         self.default_date_set()
         self.config.set('accounts', 'account', '2307000')
         self.config_save()
+
+
+class ComparisonIni:
+    def __init__(self, path=os.getcwd()):
+        self.config = configparser.ConfigParser()
+        self.path = os.path.join(path, 'comparison.ini')
+        if not os.path.exists(self.path):
+            self.create_config()
+        self.config.read(self.path)
+
+    def config_save(self):
+        if not os.path.exists(self.path):
+            file = Path(self.path)
+            file.touch(exist_ok=True)
+        with open(self.path, "w") as config_file:
+            self.config.write(config_file)
+
+    def create_config(self):
+        self.config['comparison'] = DEF_COMPARISON
+        self.config_save()
+
+    @property
+    def comparison(self):
+        items = self.config['comparison']
+        return items
