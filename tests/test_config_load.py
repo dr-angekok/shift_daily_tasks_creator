@@ -32,3 +32,4 @@ def test_read():
     assert config.scroll_path == 'tests/fixtures/files/scroll.xlsx'
     assert config.template_path == 'tests/fixtures/files/template.xlsx'
     assert config.get_dates == {'min': MIN_DATE, 'max': MAX_DATE}
+    assert config.get_account == 2307000

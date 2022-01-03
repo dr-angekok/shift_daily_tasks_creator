@@ -83,14 +83,20 @@ class CrudConfig:
         min_date_set = map(int, min_date.split('/'))
         return {'min': date(*min_date_set), 'max': date(*max_date_set)}
 
+    @property
+    def get_account(self):
+        return int(self.config.get('accounts', 'account', fallback='2307000'))
+
     def create_config(self):
         self.config.add_section('folders')
         self.config.add_section('files')
         self.config.add_section('date_time')
+        self.config.add_section('accounts')
         self.in_folder_path_set('/')
         self.out_folder_path_set('/')
         self.template_path_set('/')
         self.scroll_path_set('/')
         self.stuffing_path_set('/')
         self.default_date_set()
+        self.config.set('accounts', 'account', '2307000')
         self.config_save()
