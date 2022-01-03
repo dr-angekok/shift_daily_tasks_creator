@@ -1,6 +1,11 @@
 import configparser
 import os
 from pathlib import Path
+from datetime import date
+
+
+MIN_DATE = date(2018, 7, 1)
+MAX_DATE = date(2018, 8, 15)
 
 
 class CrudConfig:
@@ -63,12 +68,29 @@ class CrudConfig:
         with open(self.path, "w") as config_file:
             self.config.write(config_file)
 
+    def default_date_set(self):
+        max_date = MAX_DATE.strftime('%d/%m/%Y')
+        min_date = MIN_DATE.strftime('%d/%m/%Y')
+        self.config.set('date_time', 'min_date', min_date)
+        self.config.set('date_time', 'max_date', max_date)
+        self.config_save()
+
+    @property
+    def get_dates(self):
+        min_date = self.config.get('date_time', 'min_date', fallback=MAX_DATE.strftime('%Y/%m/%d'))
+        max_date = self.config.get('date_time', 'max_date', fallback=MIN_DATE.strftime('%Y/%m/%d'))
+        max_date_set = map(int, max_date.split('/'))
+        min_date_set = map(int, min_date.split('/'))
+        return {'min': date(*min_date_set), 'max': date(*max_date_set)}
+
     def create_config(self):
         self.config.add_section('folders')
         self.config.add_section('files')
+        self.config.add_section('date_time')
         self.in_folder_path_set('/')
         self.out_folder_path_set('/')
         self.template_path_set('/')
         self.scroll_path_set('/')
         self.stuffing_path_set('/')
+        self.default_date_set()
         self.config_save()

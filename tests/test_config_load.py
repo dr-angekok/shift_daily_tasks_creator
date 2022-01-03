@@ -1,7 +1,11 @@
 from STD_creator import config_crud
 import os
+from datetime import date
 
 SETTINGS_INI_PATH = 'tests/fixtures'
+
+MIN_DATE = date(2018, 7, 1)
+MAX_DATE = date(2018, 8, 15)
 
 
 def test_init(tmpdir):
@@ -27,3 +31,4 @@ def test_read():
     assert config.stuffing_path == 'tests/fixtures/files/stuffing.xlsx'
     assert config.scroll_path == 'tests/fixtures/files/scroll.xlsx'
     assert config.template_path == 'tests/fixtures/files/template.xlsx'
+    assert config.get_dates == {'min': MIN_DATE, 'max': MAX_DATE}
