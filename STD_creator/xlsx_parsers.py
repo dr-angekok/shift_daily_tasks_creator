@@ -1,8 +1,10 @@
+from os import walk, path
+
 import pandas as pd
 import openpyxl
 import re
 from random import randrange
-from datetime import timedelta, date
+from datetime import timedelta
 
 
 COL = {
@@ -10,7 +12,8 @@ COL = {
     'QUANTITY': 'quantity',
     'LABOR': 'labor',
     'CODE': 'code',
-    'DATE': 'date'
+    'DATE': 'date',
+    'BARCODE': 'barcode',
 }
 
 
@@ -70,3 +73,40 @@ def load_scroll(filename, dates_set):
     data.drop(['splits_names'], axis=1, inplace=True)
     pd.set_option('max_columns', 4)
     return data
+
+
+def parse_list_file(filename):
+    with open(filename,'r', encoding='cp1251') as f:
+        raw_file = f.read()
+    text = re.sub(r'\s\s+|(\d{2}\.){2}\d{4}\s(\d{2}:){2}\d{2}\D{3}', ' ', raw_file)
+    text = re.sub(r'\s{3}', '\n', text)
+    text_set = re.split(r'\n', text)
+    text_set.pop(0)
+    list_set = []
+    print(text_set)
+    print('*'*50)
+    for item in text_set:
+        splited_list = item.split(' ')
+        splited_list.pop(0)
+        if not splited_list:
+            break
+        if len(splited_list) == 4:
+            list_set.append(splited_list)
+        else:
+            names = ''.join(splited_list[2:-2])
+            list_set.append([splited_list[0], splited_list[1], names, splited_list[-1]])
+    print(list_set)
+    print('*' * 50)
+    data = pd.DataFrame(list_set, columns=[COL['BARCODE'], COL['CODE'], COL['NAMES'], COL['QUANTITY']])
+    data.dropna(inplace=True)
+    print(data.head)
+    return data
+
+
+def get_list_filenames(folder_path):
+    filename_list = []
+    for root, dirs, files in walk(folder_path):
+        for filename in files:
+            if filename.split('.')[-1] == 'txt':
+                filename_list.append(path.join(folder_path, filename))
+    return filename_list

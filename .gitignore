@@ -4,3 +4,4 @@ shift_daily_tasks_creator.egg-info/
 STD_creator/__pycache__/
 tests/__pycache__/
 tests/__pycache__/
+*.pyc

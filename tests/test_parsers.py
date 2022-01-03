@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
-from STD_creator.xlsx_parsers import load_scroll, hyphen_replase, split_by_space
+from STD_creator.xlsx_parsers import load_scroll, hyphen_replase, split_by_space, parse_list_file, get_list_filenames
 import os
 import pytest
 from datetime import datetime, date, time
@@ -47,12 +47,26 @@ def test_split_by_space(in_str, out):
     assert split_by_space(in_str) == out
 
 
-def test_load_scroll_columns(tmpdir):
+def test_load_scroll_columns():
     data = load_scroll(SCROLL_PATH, {'min': MIN_DATE, 'max': MAX_DATE})
-    print(data.head(6))
     assert list(data.columns) == [DEF_COL['names'], DEF_COL['quantity'], DEF_COL['labor'], DEF_COL['date'], DEF_COL['code']]
     tested_data = data.loc[data[DEF_COL['names']] == 'стапель']
-    print(tested_data.head())
     assert tested_data[DEF_COL['names']].values[0] == 'стапель'
     assert tested_data[DEF_COL['code']].values[0] == '6680.05784.00.000.00'
     assert tested_data[DEF_COL['labor']].values[0] == 418.4
+
+
+@pytest.mark.parametrize("filename,line_count", [
+    ('tests/fixtures/files/6538-1091.txt', 11),
+    ('tests/fixtures/files/6312-09007.txt', 4),
+    ('tests/fixtures/files/6262-00643.txt', 4),
+    ('tests/fixtures/files/6799-00373.txt', 11)])
+def test_parse_list_file(filename, line_count):
+    data = parse_list_file(filename)
+    assert data.shape[0] == line_count
+
+
+def test_get_list_filenames():
+    folder_path = 'tests/fixtures/files'
+    test_list = get_list_filenames(folder_path)
+    assert len(test_list) == 114
