@@ -5,16 +5,7 @@ import openpyxl
 import re
 from random import randrange
 from datetime import timedelta
-
-
-COL = {
-    'NAMES': 'names',
-    'QUANTITY': 'quantity',
-    'LABOR': 'labor',
-    'CODE': 'code',
-    'DATE': 'date',
-    'BARCODE': 'barcode',
-}
+from STD_creator.collumn_comparison import COL
 
 
 def save_with_template(filename, template_file_name, data_frame):
@@ -63,15 +54,14 @@ def convert_to_rnd_date(in_date, dates_set):
 def load_scroll(filename, dates_set):
     data = pd.read_excel(filename)
     data.drop(data.columns[[1, 3, 4, 6]], axis=1, inplace=True)
-    data.columns = [COL['NAMES'], COL['QUANTITY'], COL['LABOR'], COL['DATE']]
+    data.columns = [COL['DESIGNATION'], COL['QUANTITY'], COL['LABOR'], COL['DATE']]
     data[COL['DATE']] = data[COL['DATE']].apply(lambda d: convert_to_rnd_date(d, dates_set))
     data.dropna(inplace=True)
-    data[COL['NAMES']] = data[COL['NAMES']].apply(hyphen_replase)
-    data['splits_names'] = data[COL['NAMES']].apply(lambda line: split_by_space(line)[1])
-    data[COL['CODE']] = data[COL['NAMES']].apply(lambda line: split_by_space(line)[0])
-    data[COL['NAMES']] = data['splits_names']
-    data.drop(['splits_names'], axis=1, inplace=True)
-    pd.set_option('max_columns', 4)
+    data[COL['DESIGNATION']] = data[COL['DESIGNATION']].apply(hyphen_replase)
+    data['splits_des'] = data[COL['DESIGNATION']].apply(lambda line: split_by_space(line)[1])
+    data[COL['CODE']] = data[COL['DESIGNATION']].apply(lambda line: split_by_space(line)[0])
+    data[COL['DESIGNATION']] = data['splits_des']
+    data.drop(['splits_des'], axis=1, inplace=True)
     return data
 
 
@@ -83,8 +73,6 @@ def parse_list_file(filename):
     text_set = re.split(r'\n', text)
     text_set.pop(0)
     list_set = []
-    print(text_set)
-    print('*'*50)
     for item in text_set:
         splited_list = item.split(' ')
         splited_list.pop(0)
@@ -95,11 +83,8 @@ def parse_list_file(filename):
         else:
             names = ''.join(splited_list[2:-2])
             list_set.append([splited_list[0], splited_list[1], names, splited_list[-1]])
-    print(list_set)
-    print('*' * 50)
     data = pd.DataFrame(list_set, columns=[COL['BARCODE'], COL['CODE'], COL['NAMES'], COL['QUANTITY']])
     data.dropna(inplace=True)
-    print(data.head)
     return data
 
 
@@ -110,3 +95,7 @@ def get_list_filenames(folder_path):
             if filename.split('.')[-1] == 'txt':
                 filename_list.append(path.join(folder_path, filename))
     return filename_list
+
+def get_zero_date_set():
+    data = pd.DataFrame(columns=COL.values())
+    return data

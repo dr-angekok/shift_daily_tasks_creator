@@ -3,9 +3,9 @@ from STD_creator.stuff import StaffingTable
 STUFF_PATH = 'tests/fixtures/files/stuffing.xlsx'
 
 COLUMN ={
-    'NAMES': 'name',
-    'PROFESSION': 'prof',
-    'NUMBER': 'numb',
+    'NAMES': 'names',
+    'PROFESSION': 'profession',
+    'NUMBER': 'tnumber',
 }
 
 

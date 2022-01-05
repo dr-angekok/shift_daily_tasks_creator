@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-import pandas as pd
-from STD_creator.xlsx_parsers import load_scroll, hyphen_replase, split_by_space, parse_list_file, get_list_filenames
-import os
+from datetime import date
 import pytest
-from datetime import datetime, date, time
+from STD_creator.xlsx_parsers import hyphen_replase, split_by_space, load_scroll, parse_list_file, get_list_filenames, get_zero_date_set
 
 SCROLL_PATH = 'tests/fixtures/files/scroll.xlsx'
 
 DEF_COL = {
-    'names': 'names',
+    'names': 'designation',
     'quantity': 'quantity',
     'labor': 'labor',
     'code': 'code',
@@ -70,3 +68,10 @@ def test_get_list_filenames():
     folder_path = 'tests/fixtures/files'
     test_list = get_list_filenames(folder_path)
     assert len(test_list) == 114
+
+
+def test_get_zero_df():
+    data = get_zero_date_set()
+    assert data.shape[0] == 0
+    assert len(data.columns) == 18
+    assert 'working_out' in data.columns.values

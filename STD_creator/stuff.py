@@ -1,19 +1,8 @@
 import pandas as pd
 from collections import Counter
 from random import choice
+from STD_creator.collumn_comparison import COL, COL_COMPARISON
 
-
-COLUMN = {
-    'NAMES': 'name',
-    'PROFESSION': 'prof',
-    'NUMBER': 'numb',
-}
-
-COL_COMPARISON = {
-    'Профессия по назначению': COLUMN['PROFESSION'],
-    'Фамилия Имя Отчество': COLUMN['NAMES'],
-    'Табельный номер': COLUMN['NUMBER'],
-}
 
 DEF_COMPARISON = {
     'токарная': 'токарь',
@@ -33,7 +22,7 @@ class StaffingTable:
         self.base = pd.DataFrame()
         for key in COL_COMPARISON:
             self.base[COL_COMPARISON[key]] = loaded_base[key]
-        self.base[COLUMN['PROFESSION']] = self.base[COLUMN['PROFESSION']].apply(self._prof_clear)
+        self.base[COL['PROFESSION']] = self.base[COL['PROFESSION']].apply(self._prof_clear)
         self.base.dropna(inplace=True)
 
 
@@ -47,7 +36,7 @@ class StaffingTable:
 
     @property
     def reduced_professions_set(self):
-        profession_count = Counter(self.base[COLUMN['PROFESSION']])
+        profession_count = Counter(self.base[COL['PROFESSION']])
         min_count = min(profession_count.values())
         reduced_count = {}
         for key in profession_count:
@@ -64,8 +53,8 @@ class StaffingTable:
         return pd.NaT
 
     def get_names(self, profession):
-        lines = self.base[self.base[COLUMN['PROFESSION']] == profession]
-        clear_lines = lines.drop(COLUMN['PROFESSION'], axis=1)
+        lines = self.base[self.base[COL['PROFESSION']] == profession]
+        clear_lines = lines.drop(COL['PROFESSION'], axis=1)
         return clear_lines.values
 
     def get_rnd_names_set(self, profession):
