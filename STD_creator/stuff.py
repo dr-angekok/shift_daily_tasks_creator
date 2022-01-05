@@ -31,7 +31,7 @@ class StaffingTable:
         self.comparison = comparison
         
         self.base = pd.DataFrame()
-        for key in COL_COMPARISON.keys():
+        for key in COL_COMPARISON:
             self.base[COL_COMPARISON[key]] = loaded_base[key]
         self.base[COLUMN['PROFESSION']] = self.base[COLUMN['PROFESSION']].apply(self._prof_clear)
         self.base.dropna(inplace=True)
@@ -46,8 +46,17 @@ class StaffingTable:
         return self.base.shape[0]
 
     @property
-    def professions_count(self):
-        return Counter(self.base[COLUMN['PROFESSION']])
+    def reduced_professions_set(self):
+        profession_count = Counter(self.base[COLUMN['PROFESSION']])
+        min_count = min(profession_count.values())
+        reduced_count = {}
+        for key in profession_count:
+            reduced_count[key] = round(profession_count[key] / min_count)
+        profession_set = []
+        for key in reduced_count:
+            for _ in range(reduced_count[key]):
+                profession_set.append(key)
+        return profession_set
 
     def _prof_clear(self, item):
         if item in self.comparison.values():
@@ -61,3 +70,7 @@ class StaffingTable:
 
     def get_rnd_names_set(self, profession):
         return choice(self.get_names(profession))
+    
+    @property
+    def rnd_profession(self):
+        return choice(self.reduced_professions_set)
