@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets
 from ui_design import Ui_MainWindow
 import sys
 from STD_creator import config_crud, xlsx_parsers, stuff
+from os import walk
 
 
 def main():
@@ -20,6 +21,8 @@ class App(QtWidgets.QMainWindow, Ui_MainWindow):
         self.config = config_crud.CrudConfig()
         if self.config.in_folder_path != '/':
             self.load_list_filenames()
+        if self.config.out_folder_path != '/':
+            self.out_folder_files_count()
         if self.config.scroll_path != '/':
             self.load_scroll()
         if self.config.stuffing_path != '/':
@@ -68,13 +71,26 @@ class App(QtWidgets.QMainWindow, Ui_MainWindow):
             self.load_scroll()
 
     def in_folder_choose(self):
-        self.InFolderPath = self.folder_chooser('Входящая папка')
+        folder_name = self.folder_chooser('Входящая папка')
+        if folder_name:
+            self.config.in_folder_path_set(folder_name)
+            self.load_list_filenames()
+
+    def out_folder_files_count(self):
+        file_count = len(list(walk(self.config.out_folder_path))[0][2])
+        self.OutLcdNumber.display(file_count)
         
     def out_folder_choose(self):
+        folder_name = self.folder_chooser('Исходящая папка')
+        if folder_name:
+            self.config.out_folder_path_set(folder_name)
+            self.out_folder_files_count()
+
+
         self.OutFolderPath = self.folder_chooser('Исходящая папка')
 
     def folder_chooser(self, description):
-        file_name = QtWidgets.QFileDialog.getExistingDirectory(self, description, '.', QtWidgets.QFileDialog.ShowDirsOnly)
+        file_name = QtWidgets.QFileDialog.getExistingDirectory(self, description, '/')
         return file_name
 
     def file_chooser(self, description):
@@ -87,8 +103,12 @@ class App(QtWidgets.QMainWindow, Ui_MainWindow):
         self.statusBar().showMessage(text)
         self.statusbar.repaint()
 
+    def set_indicate(self, percent):
+        self.progressBar.setValue(percent)
+        self.progressBar.repaint()
+
     def compill(self):
-        pass
+        self.set_indicate(50)
 
 
 if __name__ == '__main__':
