@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 from datetime import date
 import pytest
-from STD_creator.xlsx_parsers import hyphen_replase, split_by_space, load_scroll, parse_list_file, get_list_filenames, get_zero_date_set
+from STD_creator.xlsx_parsers import hyphen_replase, split_by_space, load_scroll, parse_list_file, get_list_filenames, get_zero_date_set, save_with_template
+import random
+from STD_creator.collumn_comparison import COL
+from os import path
+import pandas as pd
 
 SCROLL_PATH = 'tests/fixtures/files/scroll.xlsx'
 
@@ -15,6 +19,7 @@ DEF_COL = {
 
 MIN_DATE = date(2018, 7, 1)
 MAX_DATE = date(2018, 8, 15)
+
 
 @pytest.mark.parametrize("in_str,out_str", [
     ('6680.05774.00.00.000 пресс-форма на модель №3 детали "Венец сопловой"', '6680.05774.00.00.000 пресс-форма на модель №3 детали "Венец сопловой"'),
@@ -75,3 +80,14 @@ def test_get_zero_df():
     assert data.shape[0] == 0
     assert len(data.columns) == 18
     assert 'working_out' in data.columns.values
+
+
+def test_save_w_template(tmpdir):
+    TEMPLATE_PATH = 'tests/fixtures/files/temaplate.xlsx'
+    filename = path.join(tmpdir, 'tested.xlsx')
+    data = get_zero_date_set()
+    for key in data.columns.values:
+        data[key] = [random.randint(0, 10) for i in range(10)]
+    save_with_template(filename, TEMPLATE_PATH, data)
+    test_data = pd.read_excel(filename)
+    assert test_data.shape[0] == 10

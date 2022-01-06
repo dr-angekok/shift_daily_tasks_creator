@@ -11,18 +11,27 @@ from STD_creator.collumn_comparison import COL
 def save_with_template(filename, template_file_name, data_frame):
     wb = openpyxl.load_workbook(filename=template_file_name)
     sheet = wb.active
-
-    for number, row in enumerate(data_frame.values):
+    columns = data_frame.columns
+    for number, values in enumerate(data_frame.values):
+        row = dict(zip(columns, values))
         new_row = [
             number + 1,
-            row[0],
-            row[1],
-            734,
-            row[2],
-            row[3],
-            row[4],
-            round(row[5] / 8.2, 2),
-            row[6],
+            row[COL['SHOP']],
+            row[COL['YEAR']],
+            row[COL['MONTH']],
+            row[COL['KIND']],
+            row[COL['BRIGADE']],
+            row[COL['ACCOUNT']],
+            row[COL['TNUMBER']],
+            row[COL['NAMES']],
+            row[COL['PROFESSION']],
+            row[COL['BARCODE']],
+            row[COL['CODE']],
+            row[COL['DESIGNATION']],
+            row[COL['OPERATION']],
+            row[COL['LABOR']],
+            row[COL['QUANTITY']],
+            row[COL['WORKING_OUT']],
         ]
         sheet.append(new_row)
     wb.save(filename)
