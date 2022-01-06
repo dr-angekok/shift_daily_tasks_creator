@@ -48,23 +48,18 @@ class App(QtWidgets.QMainWindow, Ui_MainWindow):
         self.ScrpLcdNumber.display(self.Scroll.shape[0])
         self.print('Загружен список шифров')
 
-    def filename_to_config_save(self, selector):
-        command = {
-            'template': [self.config.template_path_set, 'Шаблон сохранения', self.TemplateIndicator.setText('Присутствует')],
-            'stuffing': [self.config.stuffing_path_set, 'Штатное расписание', self.load_stuffing_table()],
-
-        }
-        filename = self.file_chooser(command[selector][1])[0]
-        if filename:
-            command[selector][0](filename)
-            command[selector][2]
-
     def template_choose(self):
-        self.filename_to_config_save('template')
+        filename = self.file_chooser('Шаблон')[0]
+        if filename:
+            self.config.template_path_set(filename)
+            self.TemplateIndicator.setText('Присутствует')
         self.print('Загружен шаблон')
         
     def stuffing_choose(self):
-        self.filename_to_config_save('stuffing')
+        filename = self.file_chooser('Штатное расписание')[0]
+        if filename:
+            self.config.stuffing_path_set(filename)
+            self.load_stuffing_table()
 
     def script_choose(self):
         filename = self.file_chooser('Список шифров')[0]
@@ -80,7 +75,6 @@ class App(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def folder_chooser(self, description):
         file_name = QtWidgets.QFileDialog.getExistingDirectory(self, description, '.', QtWidgets.QFileDialog.ShowDirsOnly)
-        print(file_name)
         return file_name
 
     def file_chooser(self, description):
