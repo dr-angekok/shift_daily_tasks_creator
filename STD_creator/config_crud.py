@@ -77,8 +77,8 @@ class CrudConfig:
             self.config.write(config_file)
 
     def default_date_set(self):
-        max_date = MAX_DATE.strftime('%d/%m/%Y')
-        min_date = MIN_DATE.strftime('%d/%m/%Y')
+        max_date = MAX_DATE.strftime('%Y/%m/%d')
+        min_date = MIN_DATE.strftime('%Y/%m/%d')
         self.config.set('date_time', 'min_date', min_date)
         self.config.set('date_time', 'max_date', max_date)
         self.config_save()
