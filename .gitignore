@@ -3,3 +3,4 @@ shift_daily_tasks_creator.egg-info/
 .idea/
 *.pyc
 tests/__pycache__/test_config_load.cpython-39-pytest-6.2.5.pyc
+tests/fixtures/files/.~lock.scroll.xlsx#
