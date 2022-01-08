@@ -5,8 +5,16 @@ from STD_creator.stuff import StaffingTable
 from STD_creator import xlsx_parsers
 from STD_creator.collumn_comparison import COL
 import os
-import datetime
+import re
 
+
+NORMALS = (
+    ('токарь', 0.3),
+    ('токарь', 0.25),
+    ('фрезеровщик', 0.13),
+    ('шлифовщик', 0.16),
+    ('слесарь-инструментальщик', 0.03),
+)
 
 def get_coeff(quantity):
     if quantity:
@@ -37,16 +45,29 @@ def std_compilator(indicator, config):
         for index, row in input_data.iterrows():
             std_rows = xlsx_parsers.get_zero_date_set()
             fixed_names_set = stuffing_table.rnd_fixed_names_set
-            for line_index in range(round(np.random.normal(loc=6))):
-                line = xlsx_parsers.get_zero_date_set()
-                line[COL['PROFESSION']] = stuffing_table.rnd_profession
-                name_set = fixed_names_set[line[COL['PROFESSION']].values[0]]
-                line[COL['NAMES']] = name_set[0]
-                line[COL['TNUMBER']] = name_set[1]
-                line[COL['OPERATION']] = line[COL['PROFESSION']].apply(lambda x: comparisons.prof[x])
-                for column in row.keys():
-                    line[column].loc[0] = row[column]
-                std_rows.loc[line_index] = line.loc[0]
+            if re.search(r'ГОСТ\d{4,5}-\d{2,}', row[COL['DESIGNATION']]):
+                for line_index, profession_set in enumerate(NORMALS):
+                    line = xlsx_parsers.get_zero_date_set()
+                    line[COL['PROFESSION']] = profession_set[0]
+                    line[COL['LABOR']] = profession_set[1]
+                    name_set = stuffing_table.get_rnd_names_set(profession_set[0])
+                    line[COL['NAMES']] = name_set[0]
+                    line[COL['TNUMBER']] = name_set[1]
+                    line[COL['OPERATION']] = line[COL['PROFESSION']].apply(lambda x: comparisons.prof[x])
+                    for column in row.keys():
+                        line[column].loc[0] = row[column]
+                    std_rows.loc[line_index + 1] = line.loc[0]
+            else:
+                for line_index in range(round(np.random.normal(loc=6))):
+                    line = xlsx_parsers.get_zero_date_set()
+                    line[COL['PROFESSION']] = stuffing_table.rnd_profession
+                    name_set = fixed_names_set[line[COL['PROFESSION']].values[0]]
+                    line[COL['NAMES']] = name_set[0]
+                    line[COL['TNUMBER']] = name_set[1]
+                    line[COL['OPERATION']] = line[COL['PROFESSION']].apply(lambda x: comparisons.prof[x])
+                    for column in row.keys():
+                        line[column].loc[0] = row[column]
+                    std_rows.loc[line_index + 1] = line.loc[0]
             out_data = pd.concat([out_data, std_rows])
         out_data.dropna(inplace=True)
         out_data[COL['SHOP']] = config.get_shop
