@@ -3,6 +3,7 @@ from ui_design import Ui_MainWindow
 import sys
 from STD_creator import config_crud, xlsx_parsers, stuff
 from os import walk
+from STD_creator.compilators import std_compilator
 
 
 def main():
@@ -108,7 +109,10 @@ class App(QtWidgets.QMainWindow, Ui_MainWindow):
         self.progressBar.repaint()
 
     def compill(self):
-        self.set_indicate(50)
+        self.print('Компилирую')
+        std_compilator(self.set_indicate, self.config)
+        self.out_folder_files_count()
+        self.print('Готово')
 
 
 if __name__ == '__main__':
