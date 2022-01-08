@@ -77,7 +77,7 @@ def load_scroll(filename, dates_set):
 def parse_list_file(filename):
     with open(filename,'r', encoding='cp1251') as f:
         raw_file = f.read()
-    text = re.sub(r'\s\s+|(\d{2}\.){2}\d{4}\s(\d{2}:){2}\d{2}\D{3}', ' ', raw_file)
+    text = re.sub(r'\s\s+|(\d{2}\.){2}\d{4}\s(\d{1,2}:){2}\d{2}\D{3}', ' ', raw_file)
     text = re.sub(r'\s{3}', '\n', text)
     text_set = re.split(r'\n', text)
     text_set.pop(0)
@@ -92,7 +92,7 @@ def parse_list_file(filename):
         else:
             names = ''.join(splited_list[2:-2])
             list_set.append([splited_list[0], splited_list[1], names, splited_list[-1]])
-    data = pd.DataFrame(list_set, columns=[COL['BARCODE'], COL['CODE'], COL['NAMES'], COL['QUANTITY']])
+    data = pd.DataFrame(list_set, columns=[COL['BARCODE'], COL['CODE'], COL['DESIGNATION'], COL['QUANTITY']])
     data.dropna(inplace=True)
     return data
 
@@ -107,4 +107,5 @@ def get_list_filenames(folder_path):
 
 def get_zero_date_set():
     data = pd.DataFrame(columns=COL.values())
+    data.loc[0] = [0 for _ in range(18)]
     return data
