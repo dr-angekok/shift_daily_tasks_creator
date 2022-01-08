@@ -7,14 +7,14 @@ from datetime import date
 MIN_DATE = date(2018, 7, 1)
 MAX_DATE = date(2018, 8, 15)
 
-DEF_COMPARISON = {
-    'токарная': 'токарь',
-    'фрезерная': 'фрезеровщик',
-    'шлифовальная': 'шлифовщик',
-    'расточная': 'токарь-расточник',
-    'слесарная': 'слесарь',
-}
 
+DEF_COMPARISON = {
+    'токарь': 'токарная',
+    'фрезеровщик': 'фрезерная',
+    'шлифовщик': 'шлифовальная',
+    'токарь-расточник': 'расточная',
+    'слесарь': 'слесарная',
+}
 
 class CrudConfig:
     def __init__(self, path=os.getcwd()):
@@ -93,20 +93,25 @@ class CrudConfig:
 
     @property
     def get_account(self):
-        return int(self.config.get('accounts', 'account', fallback='2307000'))
+        return int(self.config.get('others', 'account', fallback='2307000'))
+
+    @property
+    def get_shop(self):
+        return self.config.get('others', 'shop', fallback='34')
 
     def create_config(self):
         self.config.add_section('folders')
         self.config.add_section('files')
         self.config.add_section('date_time')
-        self.config.add_section('accounts')
+        self.config.add_section('others')
         self.in_folder_path_set('/')
         self.out_folder_path_set('/')
         self.template_path_set('/')
         self.scroll_path_set('/')
         self.stuffing_path_set('/')
         self.default_date_set()
-        self.config.set('accounts', 'account', '2307000')
+        self.config.set('others', 'account', '2307000')
+        self.config.set('others', 'shop', '34')
         self.config_save()
 
 
@@ -130,6 +135,6 @@ class ComparisonIni:
         self.config_save()
 
     @property
-    def comparison(self):
+    def prof(self):
         items = self.config['comparison']
         return items
