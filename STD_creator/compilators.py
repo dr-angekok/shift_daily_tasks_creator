@@ -86,9 +86,16 @@ def std_compilator(indicator, config):
             out_data[COL['MONTH']] = scroll_line[COL['DATE']].timetuple()[1]
 
             out_data[COL['QUANTITY']] = out_data[COL['QUANTITY']].apply(lambda x: int(x) if x else 1)
+            out_data[COL['WORKING_OUT']] = out_data[COL['LABOR']] * out_data[COL['QUANTITY']]
+            pre_sum = out_data[COL['WORKING_OUT']].sum()
+            normals_df = out_data[(out_data[COL['LABOR']] > 0)]
+            out_data = out_data[(out_data[COL['LABOR']] == 0)]
+
             out_data['coeff'] = out_data[COL['QUANTITY']].apply(lambda x: abs(np.random.normal(loc=10, scale=6)) * x)
             coeff_summ = out_data['coeff'].sum()
-            out_data[COL['LABOR']] = round(scroll_line[COL['LABOR']] / coeff_summ * out_data['coeff'] / out_data[COL['QUANTITY']], 2)
+            out_data[COL['LABOR']] = round((scroll_line[COL['LABOR']] - pre_sum) / coeff_summ * out_data['coeff'] / out_data[COL['QUANTITY']], 2)
+            
+            out_data = pd.concat([out_data, normals_df])
             out_data[COL['WORKING_OUT']] = out_data[COL['LABOR']] * out_data[COL['QUANTITY']]
 
         out_filename = os.path.join(config.out_folder_path, error_folder, base_filename + '.xlsx')
