@@ -5,11 +5,11 @@ from STD_creator.collumn_comparison import COL, COL_COMPARISON
 
 
 DEF_COMPARISON = {
-    'токарная': 'токарь',
-    'фрезерная': 'фрезеровщик',
-    'шлифовальная': 'шлифовщик',
-    'расточная': 'токарь-расточник',
-    'слесарная': 'слесарь-инструментальщик',
+    'токарь': 'токарная',
+    'фрезеровщик': 'фрезерная',
+    'шлифовщик': 'шлифовальная',
+    'токарь-расточник': 'расточная',
+    'слесарь': 'слесарная',
 }
 
 
@@ -47,8 +47,15 @@ class StaffingTable:
                 profession_set.append(key)
         return profession_set
 
+    @property
+    def rnd_fixed_names_set(self):
+        names_set = {}
+        for profession in self.reduced_professions_set:
+            names_set[profession] = self.get_rnd_names_set(profession)
+        return names_set
+
     def _prof_clear(self, item):
-        if item in self.comparison.values():
+        if item in self.comparison.keys():
             return item
         return pd.NaT
 
