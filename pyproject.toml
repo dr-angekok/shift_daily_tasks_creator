@@ -18,6 +18,8 @@ numpy = "^1.22.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
+PyInstaller = "3.6"
+wily = "^1.20.0"
 
 [tool.poetry.scripts]
 STD_creator = "STD_creator"
