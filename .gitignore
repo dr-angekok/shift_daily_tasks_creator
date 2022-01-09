@@ -7,3 +7,4 @@ tests/fixtures/files/.~lock.scroll.xlsx#
 comparison.ini
 main.spec
 settings.ini
+build/
