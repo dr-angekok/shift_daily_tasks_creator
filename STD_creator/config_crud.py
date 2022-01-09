@@ -98,6 +98,9 @@ class CrudConfig:
     @property
     def get_shop(self):
         return self.config.get('others', 'shop', fallback='34')
+    @property
+    def depth(self):
+        return int(self.config.get('others', 'depth', fallback=6))
 
     def create_config(self):
         self.config.add_section('folders')
@@ -112,6 +115,7 @@ class CrudConfig:
         self.default_date_set()
         self.config.set('others', 'account', '2307000')
         self.config.set('others', 'shop', '34')
+        self.config.set('others', 'depth', '6')
         self.config_save()
 
 

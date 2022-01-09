@@ -18,7 +18,7 @@ NORMALS = (
 
 def get_coeff(quantity):
     if quantity:
-        return np.random.normal(loc=50) * int(quantity)
+        return np.random.normal(loc=50, scale=30) * int(quantity)
     return 0
 
 
@@ -58,7 +58,7 @@ def std_compilator(indicator, config):
                         line[column].loc[0] = row[column]
                     std_rows.loc[line_index + 1] = line.loc[0]
             else:
-                for line_index in range(round(np.random.normal(loc=6))):
+                for line_index in range(round(np.random.normal(loc=config.depth, scale=config.depth / 2))):
                     line = xlsx_parsers.get_zero_date_set()
                     line[COL['PROFESSION']] = stuffing_table.rnd_profession
                     name_set = fixed_names_set[line[COL['PROFESSION']].values[0]]
