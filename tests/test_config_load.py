@@ -37,10 +37,10 @@ def test_read():
 
 def test_read_comparison(tmpdir):
     config = config_crud.ComparisonIni(tmpdir)
-    assert 'токарная' in config.comparison.keys()
-    assert config.comparison['токарная'] == 'токарь'
+    assert 'токарь' in config.prof.keys()
+    assert config.prof['токарь'] == 'токарная'
 
 def test_read_comparison_template():
     config = config_crud.ComparisonIni(SETTINGS_INI_PATH)
-    assert 'фрезерная' in config.comparison.keys()
-    assert config.comparison['фрезерная'] == 'фрезеровщик'
+    assert 'фрезеровщик' in config.prof.keys()
+    assert config.prof['фрезеровщик'] == 'фрезерная'

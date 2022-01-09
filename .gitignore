@@ -8,3 +8,4 @@ comparison.ini
 main.spec
 settings.ini
 build/
+.coverage

@@ -77,7 +77,7 @@ def test_get_list_filenames():
 
 def test_get_zero_df():
     data = get_zero_date_set()
-    assert data.shape[0] == 0
+    assert data.shape[0] == 1
     assert len(data.columns) == 18
     assert 'working_out' in data.columns.values
 
@@ -86,6 +86,7 @@ def test_save_w_template(tmpdir):
     TEMPLATE_PATH = 'tests/fixtures/files/temaplate.xlsx'
     filename = path.join(tmpdir, 'tested.xlsx')
     data = get_zero_date_set()
+    data.drop(data.loc[0], inplace=True)
     for key in data.columns.values:
         data[key] = [random.randint(0, 10) for i in range(10)]
     save_with_template(filename, TEMPLATE_PATH, data)
