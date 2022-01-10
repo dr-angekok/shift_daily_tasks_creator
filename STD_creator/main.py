@@ -43,9 +43,19 @@ class App(QtWidgets.QMainWindow, Ui_MainWindow):
         self.InLcdNumber.display(len(self.FileNamesList))
 
     def load_stuffing_table(self):
-        self.Stuffing = stuff.StaffingTable(self.config.stuffing_path)
-        self.StaffingIndicator.setText('Присутствует')
-        self.print('Загружено штатное')
+        try:
+            self.Stuffing = stuff.StaffingTable(self.config.stuffing_path)
+        except KeyError:
+            self.print('Штатное не содержит нужных колонок')
+            self.config.stuffing_path_set('/')
+            self.StaffingIndicator.setText('Отсутсвует')
+        except FileNotFoundError:
+            self.print('Фаил штатного отсутсвует')
+            self.config.stuffing_path_set('/')
+            self.StaffingIndicator.setText('Отсутсвует')
+        else:
+            self.StaffingIndicator.setText('Присутствует')
+            self.print('Загружено штатное')
 
     def load_scroll(self):
         self.Scroll = xlsx_parsers.load_scroll(self.config.scroll_path, self.config.get_dates)

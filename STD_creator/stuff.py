@@ -18,7 +18,6 @@ class StaffingTable:
         loaded_base = pd.read_excel(filename)
         loaded_base.dropna(inplace=True)
         self.comparison = comparison
-        
         self.base = pd.DataFrame()
         for key in COL_COMPARISON:
             self.base[COL_COMPARISON[key]] = loaded_base[key]
