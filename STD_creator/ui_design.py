@@ -154,7 +154,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Компилятор дерева в ССЗ"))
-        self.InFolderButton.setText(_translate("MainWindow", "Папака входа"))
+        self.InFolderButton.setText(_translate("MainWindow", "Папка входа"))
         self.OutFolderButton.setText(_translate("MainWindow", "Папка выхода"))
         self.ScriptButton.setText(_translate("MainWindow", "Список шифров"))
         self.StaffingIndicator.setText(_translate("MainWindow", "Отсутсвует"))
