@@ -87,9 +87,6 @@ class App(QtWidgets.QMainWindow, Ui_MainWindow):
             self.config.out_folder_path_set(folder_name)
             self.out_folder_files_count()
 
-
-        self.OutFolderPath = self.folder_chooser('Исходящая папка')
-
     def folder_chooser(self, description):
         file_name = QtWidgets.QFileDialog.getExistingDirectory(self, description, '/')
         return file_name
