@@ -49,7 +49,7 @@ def std_compilator(indicator, config):
                 for line_index, profession_set in enumerate(NORMALS):
                     line = xlsx_parsers.get_zero_date_set()
                     line[COL['PROFESSION']] = profession_set[0]
-                    line[COL['LABOR']] = profession_set[1]
+                    line[COL['LABOR']] = round(np.random.normal(loc=profession_set[1], scale=profession_set[1] / 2), 2)
                     name_set = stuffing_table.get_rnd_names_set(profession_set[0])
                     line[COL['NAMES']] = name_set[0]
                     line[COL['TNUMBER']] = name_set[1]
