@@ -1,19 +1,10 @@
 from PyQt5 import QtWidgets
-from ui_design import Ui_MainWindow
-import sys
-from STD_creator import config_crud, xlsx_parsers, stuff
+from STD_creator import config_crud, xlsx_parsers, stuff, ui_design
 from os import walk, path
 from STD_creator.compilators import std_compilator
 
 
-def main():
-    app = QtWidgets.QApplication(sys.argv)
-    window = App()
-    window.show()
-    app.exec_()
-
-
-class App(QtWidgets.QMainWindow, Ui_MainWindow):
+class App(QtWidgets.QMainWindow, ui_design.Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -150,7 +141,3 @@ class App(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             self.out_folder_files_count()
             self.print('Готово')
-
-
-if __name__ == '__main__':
-    main()
