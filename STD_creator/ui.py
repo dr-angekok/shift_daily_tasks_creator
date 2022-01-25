@@ -137,7 +137,7 @@ class App(QtWidgets.QMainWindow, ui_design.Ui_MainWindow):
         except KeyError:
             self.print('Нет нужных колонок, останов')
         except Exception as e:
-            self.print(e.message)
+            self.print(e)
         else:
             self.out_folder_files_count()
             self.print('Готово')
