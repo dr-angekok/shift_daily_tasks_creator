@@ -32,6 +32,17 @@ def get_scroll_line(code, scroll):
     return result
 
 
+def generate_zero_line(input_data, filename):
+    name = os.path.splitext(os.path.basename(filename))[0]
+    barcode_str = re.sub(r'\D', '', name)
+    count = 16 - len(barcode_str)
+    barcode = ''.join((barcode_str, '0' * count, '1'))
+    code = ''.join((name, '-00.000.00'))
+    zero_line = pd.DataFrame(columns=input_data.columns)
+    zero_line.loc[0] = (barcode, code, ' ', 1)
+    return pd.concat([zero_line, input_data])
+
+
 def std_compilator(indicator, config):
     pd.options.mode.chained_assignment = None
     files_list = xlsx_parsers.get_list_filenames(config.in_folder_path)
@@ -41,11 +52,22 @@ def std_compilator(indicator, config):
     scroll = xlsx_parsers.load_scroll(config.scroll_path, config.get_dates)
     for indicator_step, filename in enumerate(files_list):
         out_data = xlsx_parsers.get_zero_date_set()
-        input_data = xlsx_parsers.parse_list_file(filename)
+        loaded_data = xlsx_parsers.parse_list_file(filename)
+        input_data = generate_zero_line(loaded_data, filename)
         for index, row in input_data.iterrows():
             std_rows = xlsx_parsers.get_zero_date_set()
             fixed_names_set = stuffing_table.rnd_fixed_names_set
-            if re.search(r'ГОСТ\d{4,5}-\d{2,}', row[COL['DESIGNATION']]):
+            if row[COL['DESIGNATION']] == ' ':
+                line = xlsx_parsers.get_zero_date_set()
+                line[COL['PROFESSION']] = 'слесарь-инструментальщик'
+                name_set = stuffing_table.get_rnd_names_set('слесарь-инструментальщик')
+                line[COL['NAMES']] = name_set[0]
+                line[COL['TNUMBER']] = name_set[1]
+                line[COL['OPERATION']] = line[COL['PROFESSION']].apply(lambda x: comparisons.prof[x])
+                for column in row.keys():
+                    line[column].loc[0] = row[column]
+                std_rows.loc[1] = line.loc[0]
+            elif re.search(r'ГОСТ\d{4,5}-\d{2,}', row[COL['DESIGNATION']]):
                 for line_index, profession_set in enumerate(NORMALS):
                     line = xlsx_parsers.get_zero_date_set()
                     line[COL['PROFESSION']] = profession_set[0]
@@ -69,7 +91,6 @@ def std_compilator(indicator, config):
                         line[column].loc[0] = row[column]
                     std_rows.loc[line_index + 1] = line.loc[0]
             out_data = pd.concat([out_data, std_rows])
-        out_data.dropna(inplace=True)
         out_data[COL['SHOP']] = config.get_shop
         out_data[COL['ACCOUNT']] = config.get_account
         out_data[COL['KIND']] = 1
