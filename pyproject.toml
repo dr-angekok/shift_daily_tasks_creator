@@ -16,10 +16,10 @@ openpyxl = "^3.0.9"
 datetime = "^4.3"
 numpy = "^1.22.0"
 pytest-qt = "^4.0.2"
+xlrd = "^2.0.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
-PyInstaller = "3.6"
 wily = "^1.20.0"
 pytest-cov = "^3.0.0"
 
