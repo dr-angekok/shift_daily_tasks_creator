@@ -8,6 +8,7 @@ from os import path
 import pandas as pd
 
 SCROLL_PATH = 'tests/fixtures/files/scroll.xlsx'
+SCROLL2_PATH = 'tests/fixtures/files/scroll2.xls'
 
 DEF_COL = {
     'names': 'designation',
@@ -57,6 +58,10 @@ def test_load_scroll_columns():
     assert tested_data[DEF_COL['names']].values[0] == 'стапель'
     assert tested_data[DEF_COL['code']].values[0] == '6680.05784.00.000.00'
     assert tested_data[DEF_COL['labor']].values[0] == 418.4
+
+
+def test_load_xls():
+    assert load_scroll(SCROLL2_PATH, {'min': MIN_DATE, 'max': MAX_DATE}).head
 
 
 @pytest.mark.parametrize("filename,line_count", [
